@@ -45,7 +45,6 @@ CREATE TABLE Escuela (
     Nombre VARCHAR(100) NOT NULL,
     Direccion VARCHAR(200)
 );
-
 --Tabla Domicilio
 CREATE TABLE Domicilio (
     idDomicilio INT PRIMARY KEY IDENTITY(1,1),
@@ -73,25 +72,18 @@ CREATE TABLE Trayectoria (
 --DELETE FROM TemporalHistory.Trayectoria_History;
 --DROP TABLE TemporalHistory.Trayectoria_History;
 
-
---Tabla Licencia
-CREATE TABLE Licencia (
-    idLicencia INT PRIMARY KEY IDENTITY(1,1),
-    tipo VARCHAR(100) NOT NULL,
-    Desde DATE NOT NULL,
-    Hasta DATE,
-	CUIL VARCHAR (11) NOT NULL,
-	FOREIGN KEY (CUIL) REFERENCES Docente(CUIL)
-);
-
 --Tabla Inasistencia
 CREATE TABLE Inasistencia (
     idInasistencia INT PRIMARY KEY IDENTITY(1,1),
     Fecha DATE NOT NULL,
     CUIL VARCHAR(11) NOT NULL,
-    Justifica CHAR(2),
+    Justificación VARCHAR(100),
     SysStartTime DATETIME2 GENERATED ALWAYS AS ROW START HIDDEN NOT NULL,
     SysEndTime DATETIME2 GENERATED ALWAYS AS ROW END HIDDEN NOT NULL,
     PERIOD FOR SYSTEM_TIME (SysStartTime, SysEndTime),
     FOREIGN KEY (CUIL) REFERENCES Docente(CUIL)
 ) WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = TemporalHistory.Inasistencia_History));
+
+
+
+
