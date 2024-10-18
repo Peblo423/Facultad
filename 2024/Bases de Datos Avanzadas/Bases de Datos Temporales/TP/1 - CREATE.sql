@@ -50,7 +50,7 @@ CREATE TABLE Domicilio (
     idDomicilio INT PRIMARY KEY IDENTITY(1,1),
     Ciudad VARCHAR(100) NOT NULL,
     Calle VARCHAR(100) NOT NULL,
-    Número VARCHAR(10) NOT NULL,
+    Número VARCHAR(10) NOT NULL
 );
 
 --Tabla Trayectoria
@@ -77,13 +77,22 @@ CREATE TABLE Inasistencia (
     idInasistencia INT PRIMARY KEY IDENTITY(1,1),
     Fecha DATE NOT NULL,
     CUIL VARCHAR(11) NOT NULL,
-    Justificación VARCHAR(100),
+	idJustificacion INT,
     SysStartTime DATETIME2 GENERATED ALWAYS AS ROW START HIDDEN NOT NULL,
     SysEndTime DATETIME2 GENERATED ALWAYS AS ROW END HIDDEN NOT NULL,
     PERIOD FOR SYSTEM_TIME (SysStartTime, SysEndTime),
-    FOREIGN KEY (CUIL) REFERENCES Docente(CUIL)
+    FOREIGN KEY (CUIL) REFERENCES Docente(CUIL),
+	FOREIGN KEY (idJustificacion) REFERENCES Justificacion (idJustificacion)
 ) WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = TemporalHistory.Inasistencia_History));
+ALTER TABLE Inasistencia ADD idJustificacion INT FOREIGN KEY REFERENCES Justificacion (idJustificacion);
+select * from Inasistencia;
+--ALTER TABLE dbo.Inasistencia SET (SYSTEM_VERSIONING = OFF);
+--drop table Inasistencia;
+--DELETE FROM TemporalHistory.Inasistencia_History;
+--DROP TABLE TemporalHistory.Inasistencia_History;
 
-
-
+CREATE TABLE Justificacion (
+	idJustificacion INT PRIMARY KEY,
+	Descripcion VARCHAR (100)
+);
 
