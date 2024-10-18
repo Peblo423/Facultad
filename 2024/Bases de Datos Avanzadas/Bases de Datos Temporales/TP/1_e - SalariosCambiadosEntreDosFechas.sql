@@ -4,7 +4,7 @@ DECLARE @fechaInicial DATETIME2 = '2024-10-16';
 DECLARE @fechaFin DATETIME2 = '2025-06-11';
 DECLARE @cuil DATETIME2 = '20444444445';
 
-SELECT Docente.CUIL, Docente.NomyApell, Trayectoria.SysStartTime, Trayectoria.SysEndTime, SalarioBrutoTotal
+SELECT Docente.CUIL, Docente.NomyApell, Trayectoria.SysStartTime, Trayectoria.SysEndTime, SalarioBruto
 FROM Trayectoria INNER JOIN Docente ON Docente.CUIL = Trayectoria.CUIL
 WHERE
 Trayectoria.CUIL = @cuil
@@ -20,7 +20,7 @@ select * from Docente;
 select * from Trayectoria;
 select * from Trayectoria FOR SYSTEM_TIME ALL;
 delete from Trayectoria where Trayectoria.idTrayectoria>7;
-INSERT INTO Trayectoria (CUIL, EscuelaNro, Cargo, Suplente_titular, SalarioBrutoTotal)
+INSERT INTO Trayectoria (CUIL, EscuelaNro, Cargo, Suplente_titular, SalarioBruto)
 VALUES ('20444444445', 101, 'Profesor de Matemáticas', 'T', 50000.00),
 ('20444444445', 102, 'Profesor de Física', 'S', 15000.00),
 ('20444444445', 102, 'Profesor de Quimioterapia', 'S', 110000.00),

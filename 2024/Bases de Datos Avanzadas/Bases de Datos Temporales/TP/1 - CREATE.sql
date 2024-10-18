@@ -59,7 +59,7 @@ CREATE TABLE Trayectoria (
 	EscuelaNro INT NOT NULL,
     Cargo VARCHAR(100) NOT NULL,
     Suplente_titular CHAR(1) NOT NULL, -- 'S' para suplente, 'T' para titular
-    SalarioBrutoTotal DECIMAL(10,2) NOT NULL,
+    SalarioBruto DECIMAL(10,2) NOT NULL,
     SysStartTime DATETIME2 GENERATED ALWAYS AS ROW START HIDDEN NOT NULL,
     SysEndTime DATETIME2 GENERATED ALWAYS AS ROW END HIDDEN NOT NULL,
     PERIOD FOR SYSTEM_TIME (SysStartTime, SysEndTime),
