@@ -12,9 +12,9 @@ RETURN
                 -- Si todo el registro existe dentro del año @AÑO
                 WHEN YEAR(SysStartTime) = @AÑO AND YEAR(SysEndTime) = @AÑO THEN DATEDIFF(MONTH, SysStartTime, SysEndTime)
                 -- Si el registro empieza en el año @AÑO pero termina después
-                WHEN YEAR(SysStartTime) = @AÑO AND YEAR(SysEndTime) > @AÑO THEN DATEDIFF(MONTH, SysStartTime, '12-31-' + CAST(@AÑO AS VARCHAR)) + 1
+                WHEN YEAR(SysStartTime) = @AÑO AND YEAR(SysEndTime) > @AÑO THEN DATEDIFF(MONTH, SysStartTime, CAST(@AÑO AS VARCHAR) + '-12-31') + 1
                 -- Si el registro empieza antes del año @AÑO pero termina en @AÑO
-                WHEN YEAR(SysStartTime) < @AÑO AND YEAR(SysEndTime) = @AÑO THEN DATEDIFF(MONTH, '01-01-' + CAST(@AÑO AS VARCHAR), SysEndTime) + 1
+                WHEN YEAR(SysStartTime) < @AÑO AND YEAR(SysEndTime) = @AÑO THEN DATEDIFF(MONTH, CAST(@AÑO AS VARCHAR) + '-01-01', SysEndTime) + 1
                 -- Si el registro no pertenece al año @AÑO
                 WHEN YEAR(SysEndTime) < @AÑO OR YEAR(SysStartTime) > @AÑO THEN 0
                 -- Si el registro cubre todo el año
