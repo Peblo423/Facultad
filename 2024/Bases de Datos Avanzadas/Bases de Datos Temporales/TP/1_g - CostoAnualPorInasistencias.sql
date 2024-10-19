@@ -1,3 +1,6 @@
+-- Información de costo asociado por inasistencias en general por año.
+-- Considerar 30 días por mes para calcular el sueldo diario de cada docente
+
 WITH InasistenciasMensuales AS (
     SELECT 
         YEAR(I.Fecha) AS Año,
