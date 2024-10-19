@@ -1,54 +1,27 @@
 -- Promedio anual de días de vacaciones tomados por cargo y por escuela.
 -- Considerar para el promedio 160 días trabajo.
 
-WITH VacacionesPorAñoPorDocente AS (
-    SELECT 
-        YEAR(I.Fecha) AS Año,
-        D.CUIL,
-        T.Cargo,
-        T.EscuelaNro,
-        COUNT(I.idInasistencia) AS DíasDeVacaciones
-    FROM 
-        Inasistencia I
-    INNER JOIN 
-        Justificacion J ON I.idJustificacion = J.idJustificacion
-    INNER JOIN 
-        Docente D ON I.CUIL = D.CUIL
-    INNER JOIN 
-        Trayectoria T ON D.CUIL = T.CUIL
-    WHERE 
-        J.Descripcion = 'Vacaciones'
-    GROUP BY 
-        YEAR(I.Fecha),
-        D.CUIL,
-        T.Cargo,
-        T.EscuelaNro
-),
-VacacionesPorAñoPorCargoPorEscuelaPeroNoPorDocente AS (
-    SELECT 
-        Año,
-        Cargo,
-        EscuelaNro,
-        SUM(DíasDeVacaciones) AS TotalVacaciones,
-        COUNT(DISTINCT CUIL) AS TotalDocentes
-    FROM 
-        VacacionesPorAñoPorDocente
-    GROUP BY 
-        Año,
-        Cargo,
-        EscuelaNro
-)
 SELECT 
-    Año,
-    Cargo,
-    EscuelaNro,
-    CASE 
-        WHEN TotalDocentes > 0 THEN CAST(TotalVacaciones AS FLOAT) * 100 / (TotalDocentes * 160)
-        ELSE 0 
-    END AS PromedioVacacionesPorCargoEscuela
+    T.EscuelaNro,
+    T.Cargo,
+    YEAR(I.Fecha) AS Año,
+    COUNT(I.idInasistencia) AS TotalVacaciones,
+    COUNT(DISTINCT I.CUIL) AS TotalDocentes,
+    -- Promedio anual de días de vacaciones por cargo y escuela
+    CAST((COUNT(I.idInasistencia) * 100.0) / (COUNT(DISTINCT I.CUIL) * 160.0) AS DECIMAL(10,2)) AS PromedioVacaciones
 FROM 
-    VacacionesPorAñoPorCargoPorEscuelaPeroNoPorDocente
+    Inasistencia I
+INNER JOIN 
+    Justificacion J ON I.idJustificacion = J.idJustificacion
+INNER JOIN 
+    Trayectoria T ON I.CUIL = T.CUIL
+WHERE 
+    J.Descripcion = 'Vacaciones'
+GROUP BY 
+    T.EscuelaNro, 
+    T.Cargo, 
+    YEAR(I.Fecha)
 ORDER BY 
-    Año,
-    Cargo,
-    EscuelaNro;
+    Año, 
+    EscuelaNro, 
+    Cargo;
