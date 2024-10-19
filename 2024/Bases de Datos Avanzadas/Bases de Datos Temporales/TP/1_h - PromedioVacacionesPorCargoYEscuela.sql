@@ -43,7 +43,7 @@ SELECT
     Cargo,
     EscuelaNro,
     CASE 
-        WHEN TotalDocentes > 0 THEN CAST(TotalVacaciones AS FLOAT) / (TotalDocentes * 160) * 100
+        WHEN TotalDocentes > 0 THEN CAST(TotalVacaciones AS FLOAT) * 100 / (TotalDocentes * 160)
         ELSE 0 
     END AS PromedioVacacionesPorCargoEscuela
 FROM 
