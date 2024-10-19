@@ -1,9 +1,9 @@
 -- Crear esquema para tablas temporales
-CREATE SCHEMA TemporalHistory;
+--CREATE SCHEMA TemporalHistory;
 
 -- Configuración de la base de datos para permitir tablas temporales
-ALTER DATABASE tpbdaprueba
-SET MEMORY_OPTIMIZED_ELEVATE_TO_SNAPSHOT = ON;
+--ALTER DATABASE TPBDA2
+--SET MEMORY_OPTIMIZED_ELEVATE_TO_SNAPSHOT = ON;
 
 -- Tabla Docente
 CREATE TABLE Docente (
@@ -45,52 +45,54 @@ CREATE TABLE Escuela (
     Nombre VARCHAR(100) NOT NULL,
     Direccion VARCHAR(200)
 );
-
 --Tabla Domicilio
 CREATE TABLE Domicilio (
     idDomicilio INT PRIMARY KEY IDENTITY(1,1),
     Ciudad VARCHAR(100) NOT NULL,
     Calle VARCHAR(100) NOT NULL,
-    Número VARCHAR(10) NOT NULL,
+    Número VARCHAR(10) NOT NULL
 );
 
 --Tabla Trayectoria
 CREATE TABLE Trayectoria (
     CUIL VARCHAR(11) NOT NULL,
 	EscuelaNro INT NOT NULL,
-    Desde DATE NOT NULL,
-    Hasta DATE,
     Cargo VARCHAR(100) NOT NULL,
     Suplente_titular CHAR(1) NOT NULL, -- 'S' para suplente, 'T' para titular
-    SalarioBrutoTotal DECIMAL(10,2) NOT NULL,
+    SalarioBruto DECIMAL(10,2) NOT NULL,
     SysStartTime DATETIME2 GENERATED ALWAYS AS ROW START HIDDEN NOT NULL,
     SysEndTime DATETIME2 GENERATED ALWAYS AS ROW END HIDDEN NOT NULL,
     PERIOD FOR SYSTEM_TIME (SysStartTime, SysEndTime),
-    CONSTRAINT PK_Trayectoria PRIMARY KEY (CUIL, EscuelaNro, Desde),
+    CONSTRAINT PK_Trayectoria PRIMARY KEY (CUIL, EscuelaNro, SysStartTime),
     FOREIGN KEY (CUIL) REFERENCES Docente(CUIL),
     FOREIGN KEY (EscuelaNro) REFERENCES Escuela(EscuelaNro)
 ) WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = TemporalHistory.Trayectoria_History));
 --ALTER TABLE dbo.Trayectoria SET (SYSTEM_VERSIONING = OFF);
 --drop table Trayectoria;
-
---Tabla Licencia
-CREATE TABLE Licencia (
-    idLicencia INT PRIMARY KEY IDENTITY(1,1),
-    tipo VARCHAR(100) NOT NULL,
-    Desde DATE NOT NULL,
-    Hasta DATE
-);
---ALTER TABLE dbo.Licencia SET (SYSTEM_VERSIONING = OFF);
---drop table Licencia;
+--DELETE FROM TemporalHistory.Trayectoria_History;
+--DROP TABLE TemporalHistory.Trayectoria_History;
 
 --Tabla Inasistencia
 CREATE TABLE Inasistencia (
     idInasistencia INT PRIMARY KEY IDENTITY(1,1),
     Fecha DATE NOT NULL,
     CUIL VARCHAR(11) NOT NULL,
-    Justifica CHAR(2),
+	idJustificacion INT,
     SysStartTime DATETIME2 GENERATED ALWAYS AS ROW START HIDDEN NOT NULL,
     SysEndTime DATETIME2 GENERATED ALWAYS AS ROW END HIDDEN NOT NULL,
     PERIOD FOR SYSTEM_TIME (SysStartTime, SysEndTime),
-    FOREIGN KEY (CUIL) REFERENCES Docente(CUIL)
+    FOREIGN KEY (CUIL) REFERENCES Docente(CUIL),
+	FOREIGN KEY (idJustificacion) REFERENCES Justificacion (idJustificacion)
 ) WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = TemporalHistory.Inasistencia_History));
+ALTER TABLE Inasistencia ADD idJustificacion INT FOREIGN KEY REFERENCES Justificacion (idJustificacion);
+select * from Inasistencia;
+--ALTER TABLE dbo.Inasistencia SET (SYSTEM_VERSIONING = OFF);
+--drop table Inasistencia;
+--DELETE FROM TemporalHistory.Inasistencia_History;
+--DROP TABLE TemporalHistory.Inasistencia_History;
+
+CREATE TABLE Justificacion (
+	idJustificacion INT PRIMARY KEY,
+	Descripcion VARCHAR (100)
+);
+

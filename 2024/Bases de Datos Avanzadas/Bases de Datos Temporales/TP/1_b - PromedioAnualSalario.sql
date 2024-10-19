@@ -7,23 +7,29 @@ RETURN
     WITH Salarios AS (
         SELECT 
             CUIL,
-            SalarioBrutoTotal,
+            SalarioBruto,
             CASE 
-                WHEN YEAR(Desde) = @AÑO AND YEAR(Hasta) = @AÑO THEN DATEDIFF(MONTH, Desde, Hasta)
-                WHEN YEAR(Desde) = @AÑO AND YEAR(Hasta) > @AÑO THEN DATEDIFF(MONTH, Desde, DATEFROMPARTS(@AÑO, 12, 31)) + 1
-                WHEN YEAR(Desde) < @AÑO AND YEAR(Hasta) = @AÑO THEN DATEDIFF(MONTH, DATEFROMPARTS(@AÑO, 1, 1), Hasta) + 1
-                WHEN YEAR(Hasta) < @AÑO OR YEAR(Desde) > @AÑO THEN 0
+                -- Si todo el registro existe dentro del año @AÑO
+                WHEN YEAR(SysStartTime) = @AÑO AND YEAR(SysEndTime) = @AÑO THEN DATEDIFF(MONTH, SysStartTime, SysEndTime)
+                -- Si el registro empieza en el año @AÑO pero termina después
+                WHEN YEAR(SysStartTime) = @AÑO AND YEAR(SysEndTime) > @AÑO THEN DATEDIFF(MONTH, SysStartTime, CAST(@AÑO AS VARCHAR) + '-12-31') + 1
+                -- Si el registro empieza antes del año @AÑO pero termina en @AÑO
+                WHEN YEAR(SysStartTime) < @AÑO AND YEAR(SysEndTime) = @AÑO THEN DATEDIFF(MONTH, CAST(@AÑO AS VARCHAR) + '-01-01', SysEndTime) + 1
+                -- Si el registro no pertenece al año @AÑO
+                WHEN YEAR(SysEndTime) < @AÑO OR YEAR(SysStartTime) > @AÑO THEN 0
+                -- Si el registro cubre todo el año
                 ELSE 12
             END AS MesesTrabajados
         FROM Trayectoria
+        FOR SYSTEM_TIME ALL
         WHERE CUIL = @CUIL
     )
     SELECT 
         CUIL,
-		@AÑO AS Año,
-        SUM(SalarioBrutoTotal * MesesTrabajados) / 12.0 AS PromedioAnual
+        @AÑO AS Año,
+        SUM(SalarioBruto * MesesTrabajados) / 12.0 AS PromedioAnual
     FROM Salarios
-	GROUP BY CUIL
+    GROUP BY CUIL
 );
 
 drop function PromedioAnual;
