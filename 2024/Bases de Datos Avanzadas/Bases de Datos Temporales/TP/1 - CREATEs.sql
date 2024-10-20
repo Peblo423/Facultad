@@ -1,9 +1,6 @@
 -- Crear esquema para tablas temporales
---CREATE SCHEMA TemporalHistory;
 
--- Configuración de la base de datos para permitir tablas temporales
---ALTER DATABASE TPBDA2
---SET MEMORY_OPTIMIZED_ELEVATE_TO_SNAPSHOT = ON;
+CREATE SCHEMA TemporalHistory;
 
 -- Tabla Docente
 CREATE TABLE Docente (
@@ -20,8 +17,7 @@ CREATE TABLE Docente (
     SysEndTime DATETIME2 GENERATED ALWAYS AS ROW END HIDDEN NOT NULL,
     PERIOD FOR SYSTEM_TIME (SysStartTime, SysEndTime)
 ) WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = TemporalHistory.Docente_History));
---ALTER TABLE dbo.Docente SET (SYSTEM_VERSIONING = OFF);
---drop table docente;
+
 
 -- Tabla Conviviente
 CREATE TABLE Conviviente (
@@ -35,9 +31,6 @@ CREATE TABLE Conviviente (
     SysEndTime DATETIME2 GENERATED ALWAYS AS ROW END HIDDEN NOT NULL,
     PERIOD FOR SYSTEM_TIME (SysStartTime, SysEndTime)
 ) WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = TemporalHistory.Conviviente_History));
-
---ALTER TABLE dbo.Conviviente SET (SYSTEM_VERSIONING = OFF);
---drop table Conviviente;
 
 --Tabla Escuela
 CREATE TABLE Escuela (
@@ -67,10 +60,12 @@ CREATE TABLE Trayectoria (
     FOREIGN KEY (CUIL) REFERENCES Docente(CUIL),
     FOREIGN KEY (EscuelaNro) REFERENCES Escuela(EscuelaNro)
 ) WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = TemporalHistory.Trayectoria_History));
---ALTER TABLE dbo.Trayectoria SET (SYSTEM_VERSIONING = OFF);
---drop table Trayectoria;
---DELETE FROM TemporalHistory.Trayectoria_History;
---DROP TABLE TemporalHistory.Trayectoria_History;
+
+-- Tabla Justificación de inasistencias
+CREATE TABLE Justificacion (
+	idJustificacion INT PRIMARY KEY,
+	Descripcion VARCHAR (100)
+);
 
 --Tabla Inasistencia
 CREATE TABLE Inasistencia (
@@ -84,15 +79,6 @@ CREATE TABLE Inasistencia (
     FOREIGN KEY (CUIL) REFERENCES Docente(CUIL),
 	FOREIGN KEY (idJustificacion) REFERENCES Justificacion (idJustificacion)
 ) WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = TemporalHistory.Inasistencia_History));
-ALTER TABLE Inasistencia ADD idJustificacion INT FOREIGN KEY REFERENCES Justificacion (idJustificacion);
-select * from Inasistencia;
---ALTER TABLE dbo.Inasistencia SET (SYSTEM_VERSIONING = OFF);
---drop table Inasistencia;
---DELETE FROM TemporalHistory.Inasistencia_History;
---DROP TABLE TemporalHistory.Inasistencia_History;
 
-CREATE TABLE Justificacion (
-	idJustificacion INT PRIMARY KEY,
-	Descripcion VARCHAR (100)
-);
+
 

@@ -27,13 +27,13 @@ RETURN
     SELECT 
         CUIL,
         @AÑO AS Año,
-        SUM(SalarioBruto * MesesTrabajados) / 12.0 AS PromedioAnual
+		SUM(MesesTrabajados) AS MesesTrabajados,
+        CAST (SUM(SalarioBruto * MesesTrabajados) / 12.0 AS DECIMAL(10,2)) AS PromedioAnual
     FROM Salarios
     GROUP BY CUIL
 );
 
-drop function PromedioAnual;
 SELECT * 
-FROM PromedioAnual('20444444445', 2022);
+FROM PromedioAnual('20444444445', 2024);
 
-select * from Trayectoria;
+select CUIL, EscuelaNro, Cargo, Suplente_titular, SysStartTime, SysEndTime, SalarioBruto from Trayectoria;
