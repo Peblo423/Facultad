@@ -24,9 +24,15 @@ WHEN (OLD.iddirec IS DISTINCT FROM NEW.iddirec)
 EXECUTE FUNCTION registrar_cambio_domicilio();
 
 UPDATE socio 
-	SET dni = 33333333, 
+	SET dni = 32876543, 
 	 iddirec = 1
-WHERE numsocio = 1;
+WHERE numsocio = 2;
 
+delete from historialdomicilio;
+select * from SOCIO;
 SELECT * FROM historialdomicilio;
+select * from direccion;
+insert into direccion (calle,numero, piso, depto, cP, localidad, provincia) values
+('aAA', 1113, 2, 'B', 3100, 'Ciudad', 'Provincia');
+
 

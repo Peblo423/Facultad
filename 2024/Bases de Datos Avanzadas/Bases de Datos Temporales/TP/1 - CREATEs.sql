@@ -46,6 +46,21 @@ CREATE TABLE Domicilio (
     Número VARCHAR(10) NOT NULL
 );
 
+--Tabla Vivienda
+CREATE TABLE Vivienda (
+    idVivienda INT PRIMARY KEY IDENTITY(1,1),
+    CUILDocente VARCHAR(11),
+	DNIConviviente VARCHAR(8),
+	idDomicilio INT,
+	SysStartTime DATETIME2 GENERATED ALWAYS AS ROW START HIDDEN NOT NULL,
+    SysEndTime DATETIME2 GENERATED ALWAYS AS ROW END HIDDEN NOT NULL,
+    PERIOD FOR SYSTEM_TIME (SysStartTime, SysEndTime),
+	FOREIGN KEY (CUILDocente) REFERENCES Docente (CUIL),
+	FOREIGN KEY (DNIConviviente) REFERENCES Conviviente (DNI),
+	FOREIGN KEY (idDomicilio) REFERENCES Domicilio (idDomicilio)
+) WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = TemporalHistory.Vivienda_History));
+
+
 --Tabla Trayectoria
 CREATE TABLE Trayectoria (
     CUIL VARCHAR(11) NOT NULL,
