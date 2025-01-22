@@ -1,0 +1,20 @@
+{
+  "name": "SQL Server light",
+  "displayName": "SQL Server light",
+  "description": "Tema personalizado por Pablo Sant",
+  "version": "1.0.0",
+  "engines": {
+    "vscode": "^1.70.0"
+  },
+  "publisher": "Pablo Sant",
+  "categories": ["Themes"],
+  "contributes": {
+    "themes": [
+      {
+        "label": "SQL Server light",
+        "uiTheme": "vs",
+        "path": "./tema_P423.json"
+      }
+    ]
+  }
+}
